@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
+<div class="container">
+	<div class="row mt-4">
+		<div class="col-lg-5 col-md-6 m-auto card p-4">
+			<form action="{{ request.path }}" method="POST">
+			{{ form.csrf_token }}
+			
+			{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+					{% for category, message in messages %}
+				<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
+			
+			<div class="text-center">
+				<h2>User Authentication by Awath</h2>
+			</div>
+
+			{{form.username(class_="form-control mt-4", placeholder="Username")}}
+			{% for error in form.username.errors %}
+				{{ error }}
+			{% endfor %}
+			
+			{% if request.path == "/register" %}
+				{{ form.email(class_="form-control mt-4", placeholder="Email") }}
+				{% for error in form.email.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+			
+			{{ form.password(class_="form-control mt-4", placeholder="Password") }}
+			{% for error in form.password.errors %}
+				{{ error }}
+			{% endfor %}
+			
+			{% if request.path == "/register" %}
+				{{ form.confirm_password(class_="form-control mt-4", placeholder="Confirm Password") }}
+				{% for error in form.confirm_password.errors %}
+					{{ error }}
+				{% endfor %}
+			{% endif %}
+				<br />
+				<button type="submit" class="btn btn-block btn-primary mb-3">
+					{{ btn_action }}
+				</button>
+			
+				<p>
+				{% if request.path == "/register" %}
+				Already have an account? <a href="{{ url_for('login') }}">Login</a>
+				{% else %}
+				New here? <a href="{{ url_for('register') }}">Register</a>
+				{% endif %}
+				</p>
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}
